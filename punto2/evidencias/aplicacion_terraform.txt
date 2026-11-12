@@ -1,0 +1,388 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_athena_workgroup.entregas will be created
+  + resource "aws_athena_workgroup" "entregas" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "final-entregas-mariana"
+      + region        = "us-east-2"
+      + state         = "ENABLED"
+      + tags_all      = (known after apply)
+
+      + configuration {
+          + enable_minimum_encryption_configuration = (known after apply)
+          + enforce_workgroup_configuration         = true
+          + publish_cloudwatch_metrics_enabled      = true
+          + requester_pays_enabled                  = false
+
+          + result_configuration {
+              + output_location = "s3://final-entregas-mariana-226147735132-20261112/resultados-athena/"
+            }
+        }
+    }
+
+  # aws_glue_catalog_database.entregas will be created
+  + resource "aws_glue_catalog_database" "entregas" {
+      + arn          = (known after apply)
+      + catalog_id   = (known after apply)
+      + id           = (known after apply)
+      + location_uri = (known after apply)
+      + name         = "final_entregas_mariana"
+      + region       = "us-east-2"
+      + tags_all     = (known after apply)
+
+      + create_table_default_permission (known after apply)
+    }
+
+  # aws_glue_catalog_table.entregas will be created
+  + resource "aws_glue_catalog_table" "entregas" {
+      + arn           = (known after apply)
+      + catalog_id    = (known after apply)
+      + database_name = "final_entregas_mariana"
+      + id            = (known after apply)
+      + name          = "entregas"
+      + parameters    = {
+          + "EXTERNAL"                       = "TRUE"
+          + "classification"                 = "csv"
+          + "projection.enabled"             = "true"
+          + "projection.fecha.format"        = "yyyy-MM-dd"
+          + "projection.fecha.interval"      = "1"
+          + "projection.fecha.interval.unit" = "DAYS"
+          + "projection.fecha.range"         = "2026-10-01,2026-10-03"
+          + "projection.fecha.type"          = "date"
+          + "skip.header.line.count"         = "1"
+          + "storage.location.template"      = "s3://final-entregas-mariana-226147735132-20261112/entregas/fecha=${fecha}/"
+        }
+      + region        = "us-east-2"
+      + table_type    = "EXTERNAL_TABLE"
+
+      + partition_index (known after apply)
+
+      + partition_keys {
+          + name = "fecha"
+          + type = "string"
+        }
+
+      + storage_descriptor {
+          + additional_locations = (known after apply)
+          + bucket_columns       = (known after apply)
+          + input_format         = "org.apache.hadoop.mapred.TextInputFormat"
+          + location             = "s3://final-entregas-mariana-226147735132-20261112/entregas/"
+          + output_format        = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+          + parameters           = (known after apply)
+
+          + columns {
+              + name       = "id_envio"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "ciudad"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "transportadora"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "estado"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "duracion_minutos"
+              + parameters = (known after apply)
+              + type       = "int"
+            }
+
+          + ser_de_info {
+              + name                  = "csv"
+              + parameters            = {
+                  + "field.delim"          = ","
+                  + "serialization.format" = ","
+                }
+              + serialization_library = "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
+            }
+        }
+
+      + view_definition (known after apply)
+    }
+
+  # aws_s3_bucket.entregas will be created
+  + resource "aws_s3_bucket" "entregas" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "final-entregas-mariana-226147735132-20261112"
+      + bucket_domain_name          = (known after apply)
+      + bucket_namespace            = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_region               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = false
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = "us-east-2"
+      + request_payer               = (known after apply)
+      + tags_all                    = (known after apply)
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # aws_s3_bucket_public_access_block.entregas will be created
+  + resource "aws_s3_bucket_public_access_block" "entregas" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + region                  = "us-east-2"
+      + restrict_public_buckets = true
+    }
+
+Plan: 5 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + base_datos = "final_entregas_mariana"
+  + bucket     = "final-entregas-mariana-226147735132-20261112"
+  + tabla      = "entregas"
+  + workgroup  = "final-entregas-mariana"
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: 
+aws_glue_catalog_database.entregas: Creating...
+aws_s3_bucket.entregas: Creating...
+aws_s3_bucket.entregas: Creation complete after 3s [id=final-entregas-mariana-226147735132-20261112]
+aws_s3_bucket_public_access_block.entregas: Creating...
+aws_athena_workgroup.entregas: Creating...
+aws_s3_bucket_public_access_block.entregas: Creation complete after 1s [id=final-entregas-mariana-226147735132-20261112]
+aws_athena_workgroup.entregas: Creation complete after 1s [id=final-entregas-mariana]
+
+Error: listing tags for Glue Database (arn:aws:glue:us-east-2:226147735132:database/final_entregas_mariana): operation error Glue: GetTags, https response error StatusCode: 400, RequestID: 6fc0af9e-d5af-4194-aa17-f908a97a9183, AccessDeniedException: User: arn:aws:iam::226147735132:user/user_cli is not authorized to perform: glue:GetTags on resource: arn:aws:glue:us-east-2:226147735132:database/final_entregas_mariana because no identity-based policy allows the glue:GetTags action
+
+  with aws_glue_catalog_database.entregas,
+  on principal.tf line 32, in resource "aws_glue_catalog_database" "entregas":
+  32: resource "aws_glue_catalog_database" "entregas" {
+
+aws_glue_catalog_database.entregas: Refreshing state... [id=226147735132:final_entregas_mariana]
+aws_s3_bucket.entregas: Refreshing state... [id=final-entregas-mariana-226147735132-20261112]
+aws_s3_bucket_public_access_block.entregas: Refreshing state... [id=final-entregas-mariana-226147735132-20261112]
+aws_athena_workgroup.entregas: Refreshing state... [id=final-entregas-mariana]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # aws_glue_catalog_database.entregas is tainted, so must be replaced
+-/+ resource "aws_glue_catalog_database" "entregas" {
+      ~ arn          = "arn:aws:glue:us-east-2:226147735132:database/final_entregas_mariana" -> (known after apply)
+      ~ catalog_id   = "226147735132" -> (known after apply)
+      ~ id           = "226147735132:final_entregas_mariana" -> (known after apply)
+      + location_uri = (known after apply)
+        name         = "final_entregas_mariana"
+      - parameters   = {} -> null
+      - tags         = {} -> null
+      ~ tags_all     = {} -> (known after apply)
+        # (2 unchanged attributes hidden)
+
+      ~ create_table_default_permission (known after apply)
+      - create_table_default_permission {
+          - permissions = [
+              - "ALL",
+            ] -> null
+
+          - principal {
+              - data_lake_principal_identifier = "IAM_ALLOWED_PRINCIPALS" -> null
+            }
+        }
+    }
+
+  # aws_glue_catalog_table.entregas will be created
+  + resource "aws_glue_catalog_table" "entregas" {
+      + arn           = (known after apply)
+      + catalog_id    = (known after apply)
+      + database_name = "final_entregas_mariana"
+      + id            = (known after apply)
+      + name          = "entregas"
+      + parameters    = {
+          + "EXTERNAL"                       = "TRUE"
+          + "classification"                 = "csv"
+          + "projection.enabled"             = "true"
+          + "projection.fecha.format"        = "yyyy-MM-dd"
+          + "projection.fecha.interval"      = "1"
+          + "projection.fecha.interval.unit" = "DAYS"
+          + "projection.fecha.range"         = "2026-10-01,2026-10-03"
+          + "projection.fecha.type"          = "date"
+          + "skip.header.line.count"         = "1"
+          + "storage.location.template"      = "s3://final-entregas-mariana-226147735132-20261112/entregas/fecha=${fecha}/"
+        }
+      + region        = "us-east-2"
+      + table_type    = "EXTERNAL_TABLE"
+
+      + partition_index (known after apply)
+
+      + partition_keys {
+          + name = "fecha"
+          + type = "string"
+        }
+
+      + storage_descriptor {
+          + additional_locations = (known after apply)
+          + bucket_columns       = (known after apply)
+          + input_format         = "org.apache.hadoop.mapred.TextInputFormat"
+          + location             = "s3://final-entregas-mariana-226147735132-20261112/entregas/"
+          + output_format        = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+          + parameters           = (known after apply)
+
+          + columns {
+              + name       = "id_envio"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "ciudad"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "transportadora"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "estado"
+              + parameters = (known after apply)
+              + type       = "string"
+            }
+          + columns {
+              + name       = "duracion_minutos"
+              + parameters = (known after apply)
+              + type       = "int"
+            }
+
+          + ser_de_info {
+              + name                  = "csv"
+              + parameters            = {
+                  + "field.delim"          = ","
+                  + "serialization.format" = ","
+                }
+              + serialization_library = "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
+            }
+        }
+
+      + view_definition (known after apply)
+    }
+
+Plan: 2 to add, 0 to change, 1 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: 
+aws_glue_catalog_database.entregas: Destroying... [id=226147735132:final_entregas_mariana]
+aws_glue_catalog_database.entregas: Destruction complete after 1s
+aws_glue_catalog_database.entregas: Creating...
+aws_glue_catalog_database.entregas: Creation complete after 0s [id=226147735132:final_entregas_mariana]
+aws_glue_catalog_table.entregas: Creating...
+aws_glue_catalog_table.entregas: Creation complete after 1s [id=226147735132:final_entregas_mariana:entregas]
+
+Apply complete! Resources: 2 added, 0 changed, 1 destroyed.
+
+Outputs:
+
+base_datos = "final_entregas_mariana"
+bucket = "final-entregas-mariana-226147735132-20261112"
+tabla = "entregas"
+workgroup = "final-entregas-mariana"
+aws_s3_bucket.entregas: Refreshing state... [id=final-entregas-mariana-226147735132-20261112]
+aws_athena_workgroup.entregas: Refreshing state... [id=final-entregas-mariana]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # aws_athena_workgroup.entregas will be updated in-place
+  ~ resource "aws_athena_workgroup" "entregas" {
+      ~ force_destroy = false -> true
+        id            = "final-entregas-mariana"
+        name          = "final-entregas-mariana"
+        tags          = {}
+        # (5 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+
+Changes to Outputs:
+  + bucket    = "final-entregas-mariana-226147735132-20261112"
+  + workgroup = "final-entregas-mariana"
+aws_athena_workgroup.entregas: Modifying... [id=final-entregas-mariana]
+aws_athena_workgroup.entregas: Modifications complete after 1s [id=final-entregas-mariana]
+
+Warning: Resource targeting is in effect
+
+You are creating a plan with the -target option, which means that the result
+of this plan may not represent all of the changes requested by the current
+configuration.
+
+The -target option is not for routine use, and is provided only for
+exceptional situations such as recovering from errors or mistakes, or when
+Terraform specifically suggests to use it as part of an error message.
+
+Warning: Applied changes may be incomplete
+
+The plan was created with the -target option in effect, so some changes
+requested in the configuration may have been ignored and the output values
+may not be fully updated. Run the following command to verify that no other
+changes are pending:
+    terraform plan
+
+Note that the -target option is not suitable for routine use, and is provided
+only for exceptional situations such as recovering from errors or mistakes,
+or when Terraform specifically suggests to use it as part of an error
+message.
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+bucket = "final-entregas-mariana-226147735132-20261112"
+workgroup = "final-entregas-mariana"
