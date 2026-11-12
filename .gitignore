@@ -1,0 +1,19 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+
+# Credenciales
+.env
+.env.*
+.aws/
+*.pem
+credentials
+
+# Sistema
+.DS_Store

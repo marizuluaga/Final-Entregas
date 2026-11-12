@@ -260,3 +260,61 @@ En `evidencias/` se deben guardar también las salidas de la aplicación de Terr
 Al finalizar, se puede vaciar el bucket del ejercicio, incluidos los datos y resultados de Athena, antes de eliminarlo mediante Terraform. Primero se deben guardar las evidencias de la entrega. La limpieza debe abarcar todos los recursos creados para este punto. La evidencia de eliminación se debe guardar en `evidencias/eliminacion_terraform.txt` y los pasos de limpieza se deben documentar en el `README.md` de la entrega.
 
 No se deben publicar credenciales ni archivos de estado de Terraform. Estos archivos deben quedar por fuera del repositorio y de la entrega.
+
+# Implementación de Mariana Zuluaga
+
+## Prerrequisitos y configuración
+Se requiere Git, Terraform >= 1.5, AWS CLI y credenciales locales con permisos
+para gestionar los recursos del ejercicio. Región: us-east-2.
+No se incluyen credenciales ni archivos de estado en la entrega.
+
+## Despliegue
+Desde la raíz del repositorio:
+terraform -chdir=infraestructura init
+terraform -chdir=infraestructura fmt
+terraform -chdir=infraestructura validate
+terraform -chdir=infraestructura apply -no-color 2>&1 | tee evidencias/aplicacion_terraform.txt
+terraform -chdir=infraestructura output -json > evidencias/outputs.json
+
+El bucket, la base de datos, la tabla y el workgroup se identifican en outputs.json.
+La infraestructura y las propiedades de proyección se definen en infraestructura/.
+
+## Carga y consultas iniciales
+Subir individualmente los CSV de data/entregas/fecha=2026-10-01/ y
+data/entregas/fecha=2026-10-02/ al bucket, conservando sus rutas desde entregas/.
+Cada archivo se carga con aws s3 cp ARCHIVO_LOCAL s3://BUCKET/RUTA --region us-east-2.
+No subir todavía el día 3 ni los archivos de resultados_esperados/.
+
+Ejecutar las tres consultas iniciales de consultas/ en Athena, usando la base
+final_entregas_mariana y el workgroup final-entregas-mariana.
+Guardar sus CSV en resultados/inicial/ y registrar los IDs en
+evidencias/ejecuciones_athena.csv. Comparar con las referencias iniciales
+de resultados_esperados/, interpretando los archivos como CSV.
+
+## Incorporación del tercer día
+Subir únicamente data/entregas/fecha=2026-10-03/entregas.csv a
+s3://BUCKET/entregas/fecha=2026-10-03/entregas.csv.
+Ejecutar nuevamente las consultas de intentos y porcentajes, y ejecutar
+consultas/verificacion_tercer_dia.sql.
+Guardar resultados en resultados/final/ y registrar sus IDs con etapa final.
+Comparar los agregados con las referencias finales suministradas.
+
+No ejecutar crawlers, MSCK REPAIR TABLE ni ALTER TABLE ADD PARTITION.
+No modificar la tabla ni su rango para incorporar el tercer día.
+La verificación obtenida muestra seis registros del tercer día y 18 en total.
+
+## Evidencias
+evidencias/aplicacion_terraform.txt: registro del despliegue.
+evidencias/outputs.json: identificadores de recursos.
+evidencias/ejecuciones_athena.csv: consulta, etapa, ID y archivo de resultado.
+resultados/: resultados de Athena separados por etapa.
+respuestas.md: respuestas conceptuales.
+evidencias/eliminacion_terraform.txt: registro de limpieza.
+
+## Limpieza
+Guardar primero los resultados y las evidencias localmente.
+Vaciar exclusivamente el bucket del ejercicio:
+aws s3 rm s3://final-entregas-mariana-226147735132-20261112/ --recursive --region us-east-2
+
+Eliminar los recursos mediante Terraform:
+terraform -chdir=infraestructura destroy -no-color 2>&1 | tee -a evidencias/eliminacion_terraform.txt
